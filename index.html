@@ -53,6 +53,12 @@
     </script>
 
     <style>
+        body {
+            background:
+                radial-gradient(circle at top left, rgba(229, 178, 161, 0.18), transparent 30rem),
+                radial-gradient(circle at bottom right, rgba(143, 168, 155, 0.14), transparent 28rem),
+                #fcfaf7;
+        }
         .scrolled-active {
             opacity: 1 !important;
             transform: translateY(0) !important;
@@ -66,6 +72,43 @@
             -webkit-text-stroke: 1px rgba(176, 133, 103, 0.3);
             color: transparent;
         }
+        .nav-link {
+            position: relative;
+            padding-bottom: 0.25rem;
+        }
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background: #b08567;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        .hero-title {
+            text-shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
+        }
+        .soft-card {
+            box-shadow: 0 24px 70px rgba(45, 43, 42, 0.09);
+        }
+        .gallery-tile::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(255, 255, 255, 0.42);
+            border-radius: 1rem;
+            pointer-events: none;
+        }
+        .form-control {
+            background: rgba(255, 255, 255, 0.88);
+        }
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -78,7 +121,7 @@
         }
     </style>
 </head>
-<body class="bg-wedding-bg font-sans text-wedding-dark overflow-x-hidden antialiased">
+<body class="bg-wedding-bg font-sans text-wedding-dark overflow-x-hidden antialiased selection:bg-wedding-rose/30">
 
     <div id="heart-container" class="fixed inset-0 pointer-events-none z-10 overflow-hidden"></div>
 
@@ -94,55 +137,73 @@
         </button>
     </div>
 
-    <nav class="fixed top-0 left-0 right-0 z-40 bg-white/70 backdrop-blur-md border-b border-wedding-secondary/10 py-4 px-6 md:px-12 flex justify-between items-center transition-all duration-300">
-        <a href="#" class="font-cursive text-3xl md:text-4xl text-wedding-primary">D & D</a>
-        <div class="hidden md:flex space-x-8 font-serif text-sm uppercase tracking-widest">
-            <a href="#story" class="hover:text-wedding-primary transition-colors">Câu Chuyện</a>
-            <a href="#couple" class="hover:text-wedding-primary transition-colors">Cô Dâu & Chú Rể</a>
-            <a href="#gallery" class="hover:text-wedding-primary transition-colors">Album Ảnh</a>
-            <a href="#itinerary" class="hover:text-wedding-primary transition-colors">Lịch Trình</a>
-            <a href="#guestbook" class="hover:text-wedding-primary transition-colors">Lời Chúc</a>
-            <a href="#rsvp" class="hover:text-wedding-primary transition-colors font-semibold text-wedding-primary border-b border-wedding-primary/40 pb-0.5">Xác Nhận</a>
+    <nav class="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-xl border-b border-wedding-secondary/15 px-4 md:px-10 transition-all duration-300">
+        <div class="max-w-7xl mx-auto min-h-[72px] py-4 flex justify-between items-center">
+            <a href="#" class="font-cursive text-3xl md:text-4xl text-wedding-primary leading-none">D & D</a>
+            <div class="hidden lg:flex space-x-7 font-serif text-[13px] uppercase tracking-widest">
+                <a href="#story" class="nav-link hover:text-wedding-primary transition-colors">Câu Chuyện</a>
+                <a href="#couple" class="nav-link hover:text-wedding-primary transition-colors">Cô Dâu & Chú Rể</a>
+                <a href="#gallery" class="nav-link hover:text-wedding-primary transition-colors">Album Ảnh</a>
+                <a href="#itinerary" class="nav-link hover:text-wedding-primary transition-colors">Lịch Trình</a>
+                <a href="#guestbook" class="nav-link hover:text-wedding-primary transition-colors">Lời Chúc</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="#rsvp" class="hidden sm:inline-flex bg-wedding-primary hover:bg-wedding-dark text-white font-serif text-xs md:text-sm px-5 py-2.5 rounded-full uppercase tracking-wider transition-all shadow-md hover:shadow-lg">Gửi RSVP</a>
+                <button id="mobile-menu-toggle" class="lg:hidden w-10 h-10 rounded-full border border-wedding-secondary/30 bg-white/80 text-wedding-primary shadow-sm" aria-label="Mở menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
         </div>
-        <a href="#rsvp" class="bg-wedding-primary hover:bg-wedding-primary/90 text-white font-serif text-xs md:text-sm px-5 py-2.5 rounded-full uppercase tracking-wider transition-all shadow-md hover:shadow-lg">Gửi RSVP</a>
     </nav>
+    <div id="mobile-menu" class="fixed top-[72px] left-4 right-4 z-40 hidden lg:hidden bg-white/95 backdrop-blur-xl border border-wedding-secondary/20 rounded-2xl shadow-2xl p-3">
+        <a href="#story" class="block px-4 py-3 rounded-xl text-sm font-serif hover:bg-wedding-bg">Câu Chuyện</a>
+        <a href="#couple" class="block px-4 py-3 rounded-xl text-sm font-serif hover:bg-wedding-bg">Cô Dâu & Chú Rể</a>
+        <a href="#gallery" class="block px-4 py-3 rounded-xl text-sm font-serif hover:bg-wedding-bg">Album Ảnh</a>
+        <a href="#itinerary" class="block px-4 py-3 rounded-xl text-sm font-serif hover:bg-wedding-bg">Lịch Trình</a>
+        <a href="#guestbook" class="block px-4 py-3 rounded-xl text-sm font-serif hover:bg-wedding-bg">Lời Chúc</a>
+        <a href="#rsvp" class="block px-4 py-3 rounded-xl text-sm font-serif text-white bg-wedding-primary mt-1 text-center">Gửi RSVP</a>
+    </div>
 
-    <section class="min-h-screen relative flex items-center justify-center pt-20 overflow-hidden bg-cover bg-center" style="background-image: linear-gradient(rgba(45, 43, 42, 0.4), rgba(45, 43, 42, 0.55)), url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1600');">
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-wedding-bg/90"></div>
-        <div class="relative z-20 text-center text-white px-4 max-w-4xl animate-fade-in-up">
-            <p class="font-serif uppercase tracking-widest text-xs md:text-sm text-wedding-secondary/90 mb-4 animate-pulse-slow">Chào mừng bạn đến với ngày trọng đại của chúng tôi</p>
+    <section id="hero-section" class="min-h-[94vh] relative flex items-center justify-center pt-24 pb-12 overflow-hidden bg-cover bg-center" style="background-image: linear-gradient(115deg, rgba(45, 43, 42, 0.72), rgba(45, 43, 42, 0.24) 48%, rgba(176, 133, 103, 0.38)), url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1800');">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-wedding-bg"></div>
+        <div class="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-wedding-bg to-transparent"></div>
+        <div class="relative z-20 text-center text-white px-4 max-w-5xl animate-fade-in-up">
+            <p class="inline-flex items-center gap-2 font-serif uppercase tracking-widest text-[11px] md:text-sm text-white/90 mb-5 px-4 py-2 rounded-full border border-white/25 bg-white/10 backdrop-blur-md">
+                <i class="fa-regular fa-calendar-days"></i> <span id="hero-date-label">11.10.2026</span>
+            </p>
             
             <div class="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 my-6 md:my-10">
-                <h1 class="font-serif text-5xl md:text-8xl font-light tracking-wide">Văn Dương</h1>
+                <h1 id="hero-groom-name" class="hero-title font-serif text-6xl md:text-8xl font-light tracking-wide">Văn Dương</h1>
                 <span class="font-cursive text-5xl md:text-7xl text-wedding-secondary my-2 md:my-0">&</span>
-                <h1 class="font-serif text-5xl md:text-8xl font-light tracking-wide">Thùy Dung</h1>
+                <h1 id="hero-bride-name" class="hero-title font-serif text-6xl md:text-8xl font-light tracking-wide">Thùy Dung</h1>
             </div>
 
-            <p class="font-cursive text-2xl md:text-4xl text-wedding-rose/90 mb-8">Một hành trình mới, một lời cam kết trọn đời...</p>
+            <p id="hero-subtitle" class="font-cursive text-3xl md:text-5xl text-wedding-rose/95 mb-8">Một hành trình mới, một lời cam kết trọn đời</p>
             
-            <div class="grid grid-cols-4 gap-2 md:gap-4 max-w-md mx-auto mb-10 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 shadow-xl">
+            <div class="grid grid-cols-4 gap-2 md:gap-4 max-w-lg mx-auto mb-10 bg-white/15 backdrop-blur-xl p-3 md:p-5 rounded-[1.75rem] border border-white/25 shadow-2xl">
                 <div class="text-center">
-                    <span id="days" class="block font-serif text-2xl md:text-4xl font-semibold">00</span>
+                    <span id="days" class="block font-serif text-3xl md:text-5xl font-semibold">00</span>
                     <span class="text-[10px] md:text-xs uppercase tracking-wider text-white/80">Ngày</span>
                 </div>
                 <div class="text-center border-l border-white/20">
-                    <span id="hours" class="block font-serif text-2xl md:text-4xl font-semibold">00</span>
+                    <span id="hours" class="block font-serif text-3xl md:text-5xl font-semibold">00</span>
                     <span class="text-[10px] md:text-xs uppercase tracking-wider text-white/80">Giờ</span>
                 </div>
                 <div class="text-center border-l border-white/20">
-                    <span id="minutes" class="block font-serif text-2xl md:text-4xl font-semibold">00</span>
+                    <span id="minutes" class="block font-serif text-3xl md:text-5xl font-semibold">00</span>
                     <span class="text-[10px] md:text-xs uppercase tracking-wider text-white/80">Phút</span>
                 </div>
                 <div class="text-center border-l border-white/20">
-                    <span id="seconds" class="block font-serif text-2xl md:text-4xl font-semibold">00</span>
+                    <span id="seconds" class="block font-serif text-3xl md:text-5xl font-semibold">00</span>
                     <span class="text-[10px] md:text-xs uppercase tracking-wider text-white/80">Giây</span>
                 </div>
             </div>
 
-            <div class="flex flex-col items-center gap-2">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <a href="#rsvp" class="bg-white hover:bg-wedding-primary text-wedding-dark hover:text-white px-8 py-4 rounded-full font-serif uppercase tracking-widest text-sm shadow-xl transition-all duration-300 transform hover:-translate-y-1">Xác Nhận Tham Dự</a>
-                <a href="#couple" class="mt-6 text-white/70 hover:text-white transition-colors animate-bounce"><i class="fa-solid fa-chevron-down text-xl"></i></a>
+                <a href="#itinerary" class="border border-white/35 bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full font-serif uppercase tracking-widest text-sm backdrop-blur-md transition-all duration-300">Xem Lịch Trình</a>
             </div>
+            <a href="#couple" class="inline-flex mt-8 text-white/70 hover:text-white transition-colors animate-bounce"><i class="fa-solid fa-chevron-down text-xl"></i></a>
         </div>
     </section>
 
@@ -158,15 +219,15 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-stretch">
-                <div class="bg-wedding-bg rounded-3xl p-8 shadow-md border border-wedding-secondary/10 flex flex-col md:flex-row gap-8 items-center reveal-element transition-all duration-300 hover:shadow-xl hover:border-wedding-primary/20">
+                <div class="bg-wedding-bg/80 rounded-2xl p-6 md:p-8 soft-card border border-wedding-secondary/15 flex flex-col md:flex-row gap-8 items-center reveal-element transition-all duration-300 hover:-translate-y-1 hover:border-wedding-primary/25">
                     <div class="w-48 h-64 md:w-56 md:h-72 shrink-0 rounded-2xl overflow-hidden shadow-lg border-4 border-white transform -rotate-2 hover:rotate-0 transition-transform duration-300">
-                        <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=600" alt="Chú rể Văn Dương" class="w-full h-full object-cover">
+                        <img id="groom-photo" src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=600" alt="Chú rể Văn Dương" class="w-full h-full object-cover">
                     </div>
                     <div class="flex-1 text-center md:text-left">
                         <span class="font-cursive text-3xl text-wedding-primary">Chú Rể</span>
-                        <h3 class="font-serif text-2xl font-semibold text-wedding-dark mt-1">Nguyễn Văn Dương</h3>
-                        <p class="text-sm text-wedding-primary font-medium tracking-wider uppercase mb-3">Kỹ Sư Phần Mềm</p>
-                        <p class="text-wedding-dark/70 text-sm leading-relaxed mb-4">
+                        <h3 id="groom-full-name" class="font-serif text-2xl font-semibold text-wedding-dark mt-1">Nguyễn Văn Dương</h3>
+                        <p id="groom-title" class="text-sm text-wedding-primary font-medium tracking-wider uppercase mb-3">Kỹ Sư Phần Mềm</p>
+                        <p id="groom-bio" class="text-wedding-dark/70 text-sm leading-relaxed mb-4">
                             Một chàng trai công nghệ thực tế nhưng mang trái tim đầy mơ mộng. Luôn vững vàng gánh vác mọi điều, nhưng lại cực kỳ ngọt ngào khi ở cạnh người con gái của đời mình. "Yêu em chính là dự án thành công nhất đời anh."
                         </p>
                         <div class="flex justify-center md:justify-start space-x-4 text-wedding-primary/70">
@@ -176,15 +237,15 @@
                     </div>
                 </div>
 
-                <div class="bg-wedding-bg rounded-3xl p-8 shadow-md border border-wedding-secondary/10 flex flex-col md:flex-row-reverse gap-8 items-center reveal-element transition-all duration-300 hover:shadow-xl hover:border-wedding-primary/20">
+                <div class="bg-wedding-bg/80 rounded-2xl p-6 md:p-8 soft-card border border-wedding-secondary/15 flex flex-col md:flex-row-reverse gap-8 items-center reveal-element transition-all duration-300 hover:-translate-y-1 hover:border-wedding-primary/25">
                     <div class="w-48 h-64 md:w-56 md:h-72 shrink-0 rounded-2xl overflow-hidden shadow-lg border-4 border-white transform rotate-2 hover:rotate-0 transition-transform duration-300">
-                        <img src="https://images.unsplash.com/photo-1549576490-b0b4831da60a?auto=format&fit=crop&q=80&w=600" alt="Cô dâu Thùy Dung" class="w-full h-full object-cover">
+                        <img id="bride-photo" src="https://images.unsplash.com/photo-1549576490-b0b4831da60a?auto=format&fit=crop&q=80&w=600" alt="Cô dâu Thùy Dung" class="w-full h-full object-cover">
                     </div>
                     <div class="flex-1 text-center md:text-right">
                         <span class="font-cursive text-3xl text-wedding-primary">Cô Dâu</span>
-                        <h3 class="font-serif text-2xl font-semibold text-wedding-dark mt-1">Phạm Thùy Dung</h3>
-                        <p class="text-sm text-wedding-primary font-medium tracking-wider uppercase mb-3">Nhà Thiết Kế Đồ Họa</p>
-                        <p class="text-wedding-dark/70 text-sm leading-relaxed mb-4">
+                        <h3 id="bride-full-name" class="font-serif text-2xl font-semibold text-wedding-dark mt-1">Phạm Thùy Dung</h3>
+                        <p id="bride-title" class="text-sm text-wedding-primary font-medium tracking-wider uppercase mb-3">Nhà Thiết Kế Đồ Họa</p>
+                        <p id="bride-bio" class="text-wedding-dark/70 text-sm leading-relaxed mb-4">
                             Cô gái duyên dáng sở hữu tâm hồn nghệ sĩ bay bổng. Người mang đến sắc màu rực rỡ và những tiếng cười hạnh phúc cho chàng trai khô khan. "Đối với em, mỗi giây bên anh đều là một bức tranh vẽ bằng những gam màu dịu ngọt."
                         </p>
                         <div class="flex justify-center md:justify-end space-x-4 text-wedding-primary/70">
@@ -265,7 +326,8 @@
         </div>
     </section>
 
-    <section id="gallery" class="py-24 px-6 md:px-12 bg-white">
+    <section id="gallery" class="py-24 px-6 md:px-12 bg-white relative overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-wedding-bg/70 to-transparent pointer-events-none"></div>
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-16 reveal-element">
                 <span class="font-cursive text-4xl text-wedding-primary">Ảnh Kỷ Niệm</span>
@@ -274,39 +336,40 @@
                 <div class="w-16 h-[2px] bg-wedding-primary mx-auto mt-4"></div>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 reveal-element">
-                <div class="overflow-hidden rounded-2xl shadow-md group cursor-pointer relative h-64 md:h-80" onclick="openLightbox(0)">
-                    <img src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80&w=600" alt="Ảnh cưới 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="grid grid-cols-2 md:grid-cols-4 auto-rows-[220px] md:auto-rows-[260px] gap-3 md:gap-5 reveal-element">
+                <div class="gallery-tile overflow-hidden rounded-2xl shadow-md group cursor-pointer relative col-span-2 row-span-2" onclick="openLightbox(0)">
+                    <img data-gallery-img="0" src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80&w=600" alt="Ảnh cưới 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-wedding-dark/55 via-transparent to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex items-end justify-between p-5">
+                        <span class="font-serif text-white text-lg">Bộ ảnh cưới</span>
+                        <i class="fa-solid fa-magnifying-glass-plus text-white text-2xl"></i>
+                    </div>
+                </div>
+                <div class="gallery-tile overflow-hidden rounded-2xl shadow-md group cursor-pointer relative" onclick="openLightbox(1)">
+                    <img data-gallery-img="1" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600" alt="Ảnh cưới 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-wedding-dark/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <i class="fa-solid fa-magnifying-glass-plus text-white text-3xl"></i>
                     </div>
                 </div>
-                <div class="overflow-hidden rounded-2xl shadow-md group cursor-pointer relative h-64 md:h-80" onclick="openLightbox(1)">
-                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600" alt="Ảnh cưới 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="gallery-tile overflow-hidden rounded-2xl shadow-md group cursor-pointer relative" onclick="openLightbox(2)">
+                    <img data-gallery-img="2" src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=600" alt="Ảnh cưới 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-wedding-dark/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <i class="fa-solid fa-magnifying-glass-plus text-white text-3xl"></i>
                     </div>
                 </div>
-                <div class="overflow-hidden rounded-2xl shadow-md group cursor-pointer relative h-64 md:h-80" onclick="openLightbox(2)">
-                    <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=600" alt="Ảnh cưới 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="gallery-tile overflow-hidden rounded-2xl shadow-md group cursor-pointer relative" onclick="openLightbox(3)">
+                    <img data-gallery-img="3" src="https://images.unsplash.com/photo-1510076894075-8834b4999b7a?auto=format&fit=crop&q=80&w=600" alt="Ảnh cưới 4" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-wedding-dark/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <i class="fa-solid fa-magnifying-glass-plus text-white text-3xl"></i>
                     </div>
                 </div>
-                <div class="overflow-hidden rounded-2xl shadow-md group cursor-pointer relative h-64 md:h-80" onclick="openLightbox(3)">
-                    <img src="https://images.unsplash.com/photo-1510076894075-8834b4999b7a?auto=format&fit=crop&q=80&w=600" alt="Ảnh cưới 4" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="gallery-tile overflow-hidden rounded-2xl shadow-md group cursor-pointer relative" onclick="openLightbox(4)">
+                    <img data-gallery-img="4" src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600" alt="Ảnh cưới 5" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-wedding-dark/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <i class="fa-solid fa-magnifying-glass-plus text-white text-3xl"></i>
                     </div>
                 </div>
-                <div class="overflow-hidden rounded-2xl shadow-md group cursor-pointer relative h-64 md:h-80" onclick="openLightbox(4)">
-                    <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600" alt="Ảnh cưới 5" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-wedding-dark/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <i class="fa-solid fa-magnifying-glass-plus text-white text-3xl"></i>
-                    </div>
-                </div>
-                <div class="overflow-hidden rounded-2xl shadow-md group cursor-pointer relative h-64 md:h-80" onclick="openLightbox(5)">
-                    <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=600" alt="Ảnh cưới 6" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="gallery-tile overflow-hidden rounded-2xl shadow-md group cursor-pointer relative col-span-2 md:col-span-1" onclick="openLightbox(5)">
+                    <img data-gallery-img="5" src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=600" alt="Ảnh cưới 6" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-wedding-dark/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <i class="fa-solid fa-magnifying-glass-plus text-white text-3xl"></i>
                     </div>
@@ -338,8 +401,8 @@
                         <div class="flex items-center space-x-4 mb-6">
                             <span class="w-14 h-14 rounded-full bg-wedding-rose/20 text-wedding-primary flex items-center justify-center text-2xl"><i class="fa-solid fa-ring"></i></span>
                             <div>
-                                <h3 class="font-serif text-2xl font-bold">Lễ Thành Hôn</h3>
-                                <p class="text-xs text-wedding-primary font-medium uppercase tracking-wider">Tiệc Nhà Gái & Nhà Trai</p>
+                                <h3 id="event-1-title" class="font-serif text-2xl font-bold">Lễ Thành Hôn</h3>
+                                <p id="event-1-subtitle" class="text-xs text-wedding-primary font-medium uppercase tracking-wider">Tiệc Nhà Gái & Nhà Trai</p>
                             </div>
                         </div>
 
@@ -347,29 +410,29 @@
                             <div class="flex items-start space-x-3 text-wedding-dark/80">
                                 <i class="fa-solid fa-calendar-days text-wedding-primary mt-1 w-5 shrink-0"></i>
                                 <div>
-                                    <p class="font-semibold text-sm">Chủ Nhật, ngày 11 tháng 10 năm 2026</p>
-                                    <p class="text-xs text-wedding-dark/60">(Tức ngày 1 tháng 9 năm Bính Ngọ)</p>
+                                    <p id="event-1-date" class="font-semibold text-sm">Chủ Nhật, ngày 11 tháng 10 năm 2026</p>
+                                    <p id="event-1-date-note" class="text-xs text-wedding-dark/60">(Tức ngày 1 tháng 9 năm Bính Ngọ)</p>
                                 </div>
                             </div>
                             <div class="flex items-start space-x-3 text-wedding-dark/80">
                                 <i class="fa-solid fa-clock text-wedding-primary mt-1 w-5 shrink-0"></i>
                                 <div>
-                                    <p class="font-semibold text-sm">09:00 Sáng - Đón Khách & Làm Lễ Gia Tiên</p>
-                                    <p class="text-xs text-wedding-dark/60">Lễ bốc nhang gia tiên và đón râu trang trọng.</p>
+                                    <p id="event-1-time" class="font-semibold text-sm">09:00 Sáng - Đón Khách & Làm Lễ Gia Tiên</p>
+                                    <p id="event-1-time-note" class="text-xs text-wedding-dark/60">Lễ bốc nhang gia tiên và đón râu trang trọng.</p>
                                 </div>
                             </div>
                             <div class="flex items-start space-x-3 text-wedding-dark/80">
                                 <i class="fa-solid fa-map-location-dot text-wedding-primary mt-1 w-5 shrink-0"></i>
                                 <div>
-                                    <p class="font-semibold text-sm">Tư Gia Nhà Gái & Nhà Trai</p>
-                                    <p class="text-xs text-wedding-dark/60">An Khánh, Hoài Đức, Hà Nội</p>
+                                    <p id="event-1-location" class="font-semibold text-sm">Tư Gia Nhà Gái & Nhà Trai</p>
+                                    <p id="event-1-address" class="text-xs text-wedding-dark/60">An Khánh, Hoài Đức, Hà Nội</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="flex flex-col sm:flex-row gap-4 mt-6 pt-6 border-t border-wedding-secondary/10">
-                        <a href="https://maps.google.com" target="_blank" class="flex-1 text-center bg-wedding-primary hover:bg-wedding-primary/90 text-white py-3 px-6 rounded-full text-sm font-semibold transition-all shadow-md"><i class="fa-solid fa-map-pin mr-2"></i>Chỉ đường Google Maps</a>
+                        <a id="event-1-map" href="https://maps.google.com" target="_blank" class="flex-1 text-center bg-wedding-primary hover:bg-wedding-primary/90 text-white py-3 px-6 rounded-full text-sm font-semibold transition-all shadow-md"><i class="fa-solid fa-map-pin mr-2"></i>Chỉ đường Google Maps</a>
                         <button id="btn-cal-1" class="flex-1 text-center bg-white hover:bg-wedding-bg text-wedding-dark border border-wedding-secondary/40 py-3 px-6 rounded-full text-sm font-semibold transition-all"><i class="fa-solid fa-calendar-plus mr-2"></i>Thêm vào Lịch</button>
                     </div>
                 </div>
@@ -379,8 +442,8 @@
                         <div class="flex items-center space-x-4 mb-6">
                             <span class="w-14 h-14 rounded-full bg-wedding-sage/20 text-wedding-sage flex items-center justify-center text-2xl"><i class="fa-solid fa-wine-glass"></i></span>
                             <div>
-                                <h3 class="font-serif text-2xl font-bold">Tiệc Mừng Đám Cưới</h3>
-                                <p class="text-xs text-wedding-sage font-medium uppercase tracking-wider">Lễ Thành Hôn Chính Thức</p>
+                                <h3 id="event-2-title" class="font-serif text-2xl font-bold">Tiệc Mừng Đám Cưới</h3>
+                                <p id="event-2-subtitle" class="text-xs text-wedding-sage font-medium uppercase tracking-wider">Lễ Thành Hôn Chính Thức</p>
                             </div>
                         </div>
 
@@ -388,29 +451,29 @@
                             <div class="flex items-start space-x-3 text-wedding-dark/80">
                                 <i class="fa-solid fa-calendar-days text-wedding-sage mt-1 w-5 shrink-0"></i>
                                 <div>
-                                    <p class="font-semibold text-sm">Chủ Nhật, ngày 11 tháng 10 năm 2026</p>
-                                    <p class="text-xs text-wedding-dark/60">Tổ chức dạ tiệc thân mật</p>
+                                    <p id="event-2-date" class="font-semibold text-sm">Chủ Nhật, ngày 11 tháng 10 năm 2026</p>
+                                    <p id="event-2-date-note" class="text-xs text-wedding-dark/60">Tổ chức dạ tiệc thân mật</p>
                                 </div>
                             </div>
                             <div class="flex items-start space-x-3 text-wedding-dark/80">
                                 <i class="fa-solid fa-clock text-wedding-sage mt-1 w-5 shrink-0"></i>
                                 <div>
-                                    <p class="font-semibold text-sm">17:30 Chiều - Khai Tiệc Mừng</p>
-                                    <p class="text-xs text-wedding-dark/60">Đón khách: 17:30 | Lễ thành hôn: 18:30 | Nhập tiệc: 19:00</p>
+                                    <p id="event-2-time" class="font-semibold text-sm">17:30 Chiều - Khai Tiệc Mừng</p>
+                                    <p id="event-2-time-note" class="text-xs text-wedding-dark/60">Đón khách: 17:30 | Lễ thành hôn: 18:30 | Nhập tiệc: 19:00</p>
                                 </div>
                             </div>
                             <div class="flex items-start space-x-3 text-wedding-dark/80">
                                 <i class="fa-solid fa-map-location-dot text-wedding-sage mt-1 w-5 shrink-0"></i>
                                 <div>
-                                    <p class="font-semibold text-sm">Melia Wedding Center - Sảnh Lotus</p>
-                                    <p class="text-xs text-wedding-dark/60">Số 44 Lý Thường Kiệt, Trần Hưng Đạo, Hoàn Kiếm, Hà Nội</p>
+                                    <p id="event-2-location" class="font-semibold text-sm">Melia Wedding Center - Sảnh Lotus</p>
+                                    <p id="event-2-address" class="text-xs text-wedding-dark/60">Số 44 Lý Thường Kiệt, Trần Hưng Đạo, Hoàn Kiếm, Hà Nội</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="flex flex-col sm:flex-row gap-4 mt-6 pt-6 border-t border-wedding-secondary/10">
-                        <a href="https://maps.google.com" target="_blank" class="flex-1 text-center bg-wedding-sage hover:bg-wedding-sage/90 text-white py-3 px-6 rounded-full text-sm font-semibold transition-all shadow-md"><i class="fa-solid fa-map-pin mr-2"></i>Chỉ đường Google Maps</a>
+                        <a id="event-2-map" href="https://maps.google.com" target="_blank" class="flex-1 text-center bg-wedding-sage hover:bg-wedding-sage/90 text-white py-3 px-6 rounded-full text-sm font-semibold transition-all shadow-md"><i class="fa-solid fa-map-pin mr-2"></i>Chỉ đường Google Maps</a>
                         <button id="btn-cal-2" class="flex-1 text-center bg-white hover:bg-wedding-bg text-wedding-dark border border-wedding-secondary/40 py-3 px-6 rounded-full text-sm font-semibold transition-all"><i class="fa-solid fa-calendar-plus mr-2"></i>Thêm vào Lịch</button>
                     </div>
                 </div>
@@ -439,19 +502,19 @@
             <div class="space-y-6">
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-wedding-secondary/10 flex flex-col items-center">
                     <span class="text-xs uppercase tracking-wider text-wedding-primary font-bold mb-2">Mừng cưới Chú rể</span>
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=STB%3A123456789%3A%C4%90%E1%BB%A9c%20Anh%20Mung%20Cuoi" alt="QR Code Chú rể" class="w-40 h-40 border border-wedding-secondary/20 rounded-xl mb-4 p-2 bg-wedding-bg">
-                    <p class="font-semibold text-wedding-dark">Ngân hàng Techcombank (TCB)</p>
-                    <p class="text-sm font-mono text-wedding-primary font-semibold mt-1">1903 546 890 123</p>
-                    <p class="text-xs text-wedding-dark/60 mt-0.5">Chủ TK: NGUYEN VAN DUONG</p>
+                    <img id="groom-bank-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=STB%3A123456789%3AVan%20Duong%20Mung%20Cuoi" alt="QR Code Chú rể" class="w-40 h-40 border border-wedding-secondary/20 rounded-xl mb-4 p-2 bg-wedding-bg">
+                    <p id="groom-bank-name" class="font-semibold text-wedding-dark">Ngân hàng Techcombank (TCB)</p>
+                    <p id="groom-bank-number" class="text-sm font-mono text-wedding-primary font-semibold mt-1">1903 546 890 123</p>
+                    <p id="groom-bank-owner" class="text-xs text-wedding-dark/60 mt-0.5">Chủ TK: NGUYEN VAN DUONG</p>
                     <button id="btn-copy-groom" class="mt-3 text-xs text-wedding-primary border border-wedding-primary/30 px-3 py-1.5 rounded-full hover:bg-wedding-primary hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Sao chép STK</button>
                 </div>
 
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-wedding-secondary/10 flex flex-col items-center">
                     <span class="text-xs uppercase tracking-wider text-wedding-rose font-bold mb-2">Mừng cưới Cô dâu</span>
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=STB%3A987654321%3AMai%20Phuong%20Mung%20Cuoi" alt="QR Code Cô dâu" class="w-40 h-40 border border-wedding-secondary/20 rounded-xl mb-4 p-2 bg-wedding-bg">
-                    <p class="font-semibold text-wedding-dark">Ngân hàng Vietcombank (VCB)</p>
-                    <p class="text-sm font-mono text-wedding-rose font-semibold mt-1">1011 223 344 55</p>
-                    <p class="text-xs text-wedding-dark/60 mt-0.5">Chủ TK: PHAM THUY DUNG</p>
+                    <img id="bride-bank-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=STB%3A987654321%3AThuy%20Dung%20Mung%20Cuoi" alt="QR Code Cô dâu" class="w-40 h-40 border border-wedding-secondary/20 rounded-xl mb-4 p-2 bg-wedding-bg">
+                    <p id="bride-bank-name" class="font-semibold text-wedding-dark">Ngân hàng Vietcombank (VCB)</p>
+                    <p id="bride-bank-number" class="text-sm font-mono text-wedding-rose font-semibold mt-1">1011 223 344 55</p>
+                    <p id="bride-bank-owner" class="text-xs text-wedding-dark/60 mt-0.5">Chủ TK: PHAM THUY DUNG</p>
                     <button id="btn-copy-bride" class="mt-3 text-xs text-wedding-rose border border-wedding-rose/30 px-3 py-1.5 rounded-full hover:bg-wedding-rose hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Sao chép STK</button>
                 </div>
             </div>
@@ -507,15 +570,14 @@
     </section>
 
     <section id="rsvp" class="py-24 px-6 md:px-12 bg-white relative overflow-hidden">
-        <div class="absolute -top-10 left-10 w-40 h-40 bg-wedding-rose/10 rounded-full blur-2xl"></div>
-        <div class="absolute -bottom-10 right-10 w-40 h-40 bg-wedding-primary/10 rounded-full blur-2xl"></div>
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-wedding-secondary/50 to-transparent"></div>
 
-        <div class="max-w-3xl mx-auto bg-wedding-bg p-8 md:p-16 rounded-[40px] shadow-xl border border-wedding-secondary/15 reveal-element relative z-10">
+        <div class="max-w-4xl mx-auto bg-wedding-bg/90 p-6 md:p-12 lg:p-16 rounded-[2rem] soft-card border border-wedding-secondary/20 reveal-element relative z-10">
             <div class="text-center mb-12">
                 <span class="font-cursive text-4xl text-wedding-primary">Gặp Mặt Thân Mật</span>
                 <h2 class="font-serif text-3xl md:text-5xl mt-2 font-light">Xác Nhận Tham Dự</h2>
                 <p class="text-wedding-dark/60 text-xs md:text-sm mt-3 max-w-md mx-auto leading-relaxed">
-                    Để công tác tiếp đón và chuẩn bị bữa tiệc cưới được trọn vẹn nhất, kính mong quý khách vui lòng điền thông tin xác nhận trước ngày <b>15/09/2026</b>.
+                    Để công tác tiếp đón và chuẩn bị bữa tiệc cưới được trọn vẹn nhất, kính mong quý khách vui lòng điền thông tin xác nhận trước ngày <b id="rsvp-deadline">15/09/2026</b>.
                 </p>
                 <div class="w-12 h-[1px] bg-wedding-primary/60 mx-auto mt-4"></div>
             </div>
@@ -524,11 +586,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-xs font-semibold text-wedding-dark/70 uppercase tracking-wider mb-2" for="rsvp-name">Họ và Tên Khách Mời <span class="text-red-500">*</span></label>
-                        <input type="text" id="rsvp-name" required class="w-full px-4 py-3 border border-wedding-secondary/20 rounded-xl focus:ring-1 focus:ring-wedding-primary focus:border-wedding-primary outline-none text-sm transition-all" placeholder="Ví dụ: Nguyễn Văn A">
+                        <input type="text" id="rsvp-name" required class="form-control w-full px-4 py-3 border border-wedding-secondary/20 rounded-xl focus:ring-1 focus:ring-wedding-primary focus:border-wedding-primary outline-none text-sm transition-all" placeholder="Ví dụ: Nguyễn Văn A">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-wedding-dark/70 uppercase tracking-wider mb-2" for="rsvp-phone">Số Điện Thoại <span class="text-red-500">*</span></label>
-                        <input type="tel" id="rsvp-phone" required class="w-full px-4 py-3 border border-wedding-secondary/20 rounded-xl focus:ring-1 focus:ring-wedding-primary focus:border-wedding-primary outline-none text-sm transition-all" placeholder="Ví dụ: 0912345678">
+                        <input type="tel" id="rsvp-phone" required class="form-control w-full px-4 py-3 border border-wedding-secondary/20 rounded-xl focus:ring-1 focus:ring-wedding-primary focus:border-wedding-primary outline-none text-sm transition-all" placeholder="Ví dụ: 0912345678">
                     </div>
                 </div>
 
@@ -548,7 +610,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-wedding-dark/70 uppercase tracking-wider mb-2" for="rsvp-attendance">Bạn có thể tham dự không? <span class="text-red-500">*</span></label>
-                        <select id="rsvp-attendance" class="w-full px-4 py-3 border border-wedding-secondary/20 rounded-xl focus:ring-1 focus:ring-wedding-primary focus:border-wedding-primary outline-none text-sm transition-all bg-white">
+                        <select id="rsvp-attendance" class="form-control w-full px-4 py-3 border border-wedding-secondary/20 rounded-xl focus:ring-1 focus:ring-wedding-primary focus:border-wedding-primary outline-none text-sm transition-all">
                             <option value="Có, tôi sẽ đến">Có, tôi sẽ đến tham dự</option>
                             <option value="Rất tiếc, tôi không thể">Rất tiếc, tôi bận mất rồi</option>
                         </select>
@@ -558,7 +620,7 @@
                 <div id="guest-count-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 transition-all duration-300">
                     <div>
                         <label class="block text-xs font-semibold text-wedding-dark/70 uppercase tracking-wider mb-2" for="rsvp-guests">Số lượng người đi cùng</label>
-                        <select id="rsvp-guests" class="w-full px-4 py-3 border border-wedding-secondary/20 rounded-xl focus:ring-1 focus:ring-wedding-primary focus:border-wedding-primary outline-none text-sm transition-all bg-white">
+                        <select id="rsvp-guests" class="form-control w-full px-4 py-3 border border-wedding-secondary/20 rounded-xl focus:ring-1 focus:ring-wedding-primary focus:border-wedding-primary outline-none text-sm transition-all">
                             <option value="Chỉ mình tôi">Chỉ mình tôi (1 người)</option>
                             <option value="Đi cùng 1 người khác">Cùng 1 người khác (2 người)</option>
                             <option value="Đi cùng gia đình">Cùng gia đình thân thương</option>
@@ -566,12 +628,12 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-wedding-dark/70 uppercase tracking-wider mb-2" for="rsvp-diet">Chế độ ăn đặc biệt (nếu có)</label>
-                        <input type="text" id="rsvp-diet" class="w-full px-4 py-3 border border-wedding-secondary/20 rounded-xl focus:ring-1 focus:ring-wedding-primary focus:border-wedding-primary outline-none text-sm transition-all" placeholder="Ví dụ: Ăn chay, dị ứng hải sản...">
+                        <input type="text" id="rsvp-diet" class="form-control w-full px-4 py-3 border border-wedding-secondary/20 rounded-xl focus:ring-1 focus:ring-wedding-primary focus:border-wedding-primary outline-none text-sm transition-all" placeholder="Ví dụ: Ăn chay, dị ứng hải sản...">
                     </div>
                 </div>
 
                 <div class="pt-4">
-                    <button type="submit" class="w-full bg-wedding-primary hover:bg-wedding-primary/90 text-white font-serif uppercase tracking-widest text-sm font-semibold py-4 rounded-full transition-all shadow-lg transform hover:-translate-y-0.5">Xác nhận phản hồi</button>
+                    <button type="submit" class="w-full bg-wedding-primary hover:bg-wedding-dark text-white font-serif uppercase tracking-widest text-sm font-semibold py-4 rounded-full transition-all shadow-lg transform hover:-translate-y-0.5">Xác nhận phản hồi</button>
                 </div>
             </form>
         </div>
@@ -595,16 +657,16 @@
             
             <div class="flex items-center justify-center space-x-2 text-wedding-rose/90 py-2">
                 <i class="fa-solid fa-heart animate-pulse"></i>
-                <span class="font-cursive text-2xl">Văn Dương & Thùy Dung</span>
+                <span id="footer-couple-name" class="font-cursive text-2xl">Văn Dương & Thùy Dung</span>
                 <i class="fa-solid fa-heart animate-pulse"></i>
             </div>
             
             <p class="text-xs text-white/50 leading-relaxed max-w-sm mx-auto">
                 Mọi thắc mắc vui lòng liên hệ trực tiếp gia đình thông qua số điện thoại đại diện in trên thiệp mời chính thức.
             </p>
-            <p class="text-sm font-serif italic text-wedding-primary font-bold">#VanDuongThuyDungWedding2026</p>
+            <p id="footer-hashtag" class="text-sm font-serif italic text-wedding-primary font-bold">#VanDuongThuyDungWedding2026</p>
             <div class="pt-8 border-t border-white/10 text-[10px] text-white/30 flex justify-between items-center max-w-md mx-auto">
-                <p>© 2026 Van Duong & Thuy Dung. All rights reserved.</p>
+                <p id="footer-copyright">© 2026 Van Duong & Thuy Dung. All rights reserved.</p>
                 <p>Designed with Love.</p>
             </div>
         </div>
@@ -616,6 +678,7 @@
         import { 
             getFirestore, 
             collection, 
+            doc,
             addDoc, 
             onSnapshot, 
             query, 
@@ -625,22 +688,193 @@
 
         // 1. Cấu hình Firebase App (Thay các chuỗi rỗng bằng thông tin trên Firebase Console của bạn)
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyDjg125rB3CxikUv6pdWnvkIB6jSO52zVc",
+            authDomain: "wedding-4f416.firebaseapp.com",
+            projectId: "wedding-4f416",
+            storageBucket: "wedding-4f416.firebasestorage.app",
+            messagingSenderId: "46663095399",
+            appId: "1:46663095399:web:d7e9cf248c528a7ad170c2"
         };
 
         // Khởi tạo nền tảng ứng dụng Cloud
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        const DEFAULT_SETTINGS = {
+            couple: {
+                groomFirstName: "Văn Dương",
+                brideFirstName: "Thùy Dung",
+                groomFullName: "Nguyễn Văn Dương",
+                brideFullName: "Phạm Thùy Dung",
+                groomTitle: "Kỹ Sư Phần Mềm",
+                brideTitle: "Nhà Thiết Kế Đồ Họa",
+                groomBio: "Một chàng trai công nghệ thực tế nhưng mang trái tim đầy mơ mộng. Luôn vững vàng gánh vác mọi điều, nhưng lại cực kỳ ngọt ngào khi ở cạnh người con gái của đời mình. \"Yêu em chính là dự án thành công nhất đời anh.\"",
+                brideBio: "Cô gái duyên dáng sở hữu tâm hồn nghệ sĩ bay bổng. Người mang đến sắc màu rực rỡ và những tiếng cười hạnh phúc cho chàng trai khô khan. \"Đối với em, mỗi giây bên anh đều là một bức tranh vẽ bằng những gam màu dịu ngọt.\"",
+                groomPhoto: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=600",
+                bridePhoto: "https://images.unsplash.com/photo-1549576490-b0b4831da60a?auto=format&fit=crop&q=80&w=600"
+            },
+            wedding: {
+                dateISO: "2026-10-11T09:00:00+07:00",
+                dateLabel: "11.10.2026",
+                heroSubtitle: "Một hành trình mới, một lời cam kết trọn đời",
+                rsvpDeadline: "15/09/2026",
+                heroImage: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1800",
+                hashtag: "#VanDuongThuyDungWedding2026"
+            },
+            gallery: [
+                "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80&w=1200",
+                "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200",
+                "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=1200",
+                "https://images.unsplash.com/photo-1510076894075-8834b4999b7a?auto=format&fit=crop&q=80&w=1200",
+                "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1200",
+                "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=1200"
+            ],
+            events: [
+                {
+                    title: "Lễ Thành Hôn",
+                    subtitle: "Tiệc Nhà Gái & Nhà Trai",
+                    date: "Chủ Nhật, ngày 11 tháng 10 năm 2026",
+                    dateNote: "(Tức ngày 1 tháng 9 năm Bính Ngọ)",
+                    time: "09:00 Sáng - Đón Khách & Làm Lễ Gia Tiên",
+                    timeNote: "Lễ bốc nhang gia tiên và đón râu trang trọng.",
+                    location: "Tư Gia Nhà Gái & Nhà Trai",
+                    address: "An Khánh, Hoài Đức, Hà Nội",
+                    mapUrl: "https://maps.google.com",
+                    calendarTitle: "Lễ Thành Hôn Văn Dương & Thùy Dung",
+                    calendarStart: "20261011T090000",
+                    calendarEnd: "20261011T120000"
+                },
+                {
+                    title: "Tiệc Mừng Đám Cưới",
+                    subtitle: "Lễ Thành Hôn Chính Thức",
+                    date: "Chủ Nhật, ngày 11 tháng 10 năm 2026",
+                    dateNote: "Tổ chức dạ tiệc thân mật",
+                    time: "17:30 Chiều - Khai Tiệc Mừng",
+                    timeNote: "Đón khách: 17:30 | Lễ thành hôn: 18:30 | Nhập tiệc: 19:00",
+                    location: "Melia Wedding Center - Sảnh Lotus",
+                    address: "Số 44 Lý Thường Kiệt, Trần Hưng Đạo, Hoàn Kiếm, Hà Nội",
+                    mapUrl: "https://maps.google.com",
+                    calendarTitle: "Tiệc Mừng Đám Cưới Văn Dương & Thùy Dung",
+                    calendarStart: "20261011T173000",
+                    calendarEnd: "20261011T213000"
+                }
+            ],
+            gifts: {
+                groom: {
+                    bank: "Ngân hàng Techcombank (TCB)",
+                    number: "1903546890123",
+                    displayNumber: "1903 546 890 123",
+                    owner: "NGUYEN VAN DUONG",
+                    qr: "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=STB%3A123456789%3AVan%20Duong%20Mung%20Cuoi"
+                },
+                bride: {
+                    bank: "Ngân hàng Vietcombank (VCB)",
+                    number: "101122334455",
+                    displayNumber: "1011 223 344 55",
+                    owner: "PHAM THUY DUNG",
+                    qr: "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=STB%3A987654321%3AThuy%20Dung%20Mung%20Cuoi"
+                }
+            }
+        };
+        const cloneSettings = (value) => JSON.parse(JSON.stringify(value));
+        let siteSettings = cloneSettings(DEFAULT_SETTINGS);
+
+        function mergeSettings(base, override = {}) {
+            const output = cloneSettings(base);
+            Object.keys(override || {}).forEach((key) => {
+                if (Array.isArray(override[key])) {
+                    output[key] = override[key];
+                } else if (override[key] && typeof override[key] === "object") {
+                    output[key] = mergeSettings(output[key] || {}, override[key]);
+                } else if (override[key] !== undefined && override[key] !== "") {
+                    output[key] = override[key];
+                }
+            });
+            return output;
+        }
+
+        function setText(id, value) {
+            const element = document.getElementById(id);
+            if (element && value !== undefined) element.textContent = value;
+        }
+
+        function setImage(id, src, alt) {
+            const img = document.getElementById(id);
+            if (!img || !src) return;
+            img.src = src;
+            if (alt) img.alt = alt;
+        }
+
+        function applySiteSettings(settings) {
+            const couple = settings.couple;
+            const wedding = settings.wedding;
+            const pairName = `${couple.groomFirstName} & ${couple.brideFirstName}`;
+            const asciiPairName = `${couple.groomFirstName} & ${couple.brideFirstName}`
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+            document.title = `${pairName} - Lễ Thành Hôn`;
+            document.getElementById("hero-section").style.backgroundImage = `linear-gradient(115deg, rgba(45, 43, 42, 0.72), rgba(45, 43, 42, 0.24) 48%, rgba(176, 133, 103, 0.38)), url('${wedding.heroImage}')`;
+            setText("hero-date-label", wedding.dateLabel);
+            setText("hero-groom-name", couple.groomFirstName);
+            setText("hero-bride-name", couple.brideFirstName);
+            setText("hero-subtitle", wedding.heroSubtitle);
+            setText("groom-full-name", couple.groomFullName);
+            setText("bride-full-name", couple.brideFullName);
+            setText("groom-title", couple.groomTitle);
+            setText("bride-title", couple.brideTitle);
+            setText("groom-bio", couple.groomBio);
+            setText("bride-bio", couple.brideBio);
+            setImage("groom-photo", couple.groomPhoto, `Chú rể ${couple.groomFirstName}`);
+            setImage("bride-photo", couple.bridePhoto, `Cô dâu ${couple.brideFirstName}`);
+            setText("rsvp-deadline", wedding.rsvpDeadline);
+            setText("footer-couple-name", pairName);
+            setText("footer-hashtag", wedding.hashtag);
+            setText("footer-copyright", `© 2026 ${asciiPairName}. All rights reserved.`);
+
+            galleryImages = DEFAULT_SETTINGS.gallery.map((url, index) => settings.gallery[index] || url);
+            document.querySelectorAll("[data-gallery-img]").forEach((img) => {
+                const index = Number(img.dataset.galleryImg);
+                if (galleryImages[index]) img.src = galleryImages[index].replace("w=1200", "w=600");
+            });
+
+            settings.events.slice(0, 2).forEach((event, index) => {
+                const n = index + 1;
+                setText(`event-${n}-title`, event.title);
+                setText(`event-${n}-subtitle`, event.subtitle);
+                setText(`event-${n}-date`, event.date);
+                setText(`event-${n}-date-note`, event.dateNote);
+                setText(`event-${n}-time`, event.time);
+                setText(`event-${n}-time-note`, event.timeNote);
+                setText(`event-${n}-location`, event.location);
+                setText(`event-${n}-address`, event.address);
+                const mapLink = document.getElementById(`event-${n}-map`);
+                if (mapLink && event.mapUrl) mapLink.href = event.mapUrl;
+            });
+
+            setText("groom-bank-name", settings.gifts.groom.bank);
+            setText("groom-bank-number", settings.gifts.groom.displayNumber || settings.gifts.groom.number);
+            setText("groom-bank-owner", `Chủ TK: ${settings.gifts.groom.owner}`);
+            setImage("groom-bank-qr", settings.gifts.groom.qr);
+            setText("bride-bank-name", settings.gifts.bride.bank);
+            setText("bride-bank-number", settings.gifts.bride.displayNumber || settings.gifts.bride.number);
+            setText("bride-bank-owner", `Chủ TK: ${settings.gifts.bride.owner}`);
+            setImage("bride-bank-qr", settings.gifts.bride.qr);
+        }
+
+        const siteSettingsDoc = doc(db, "site_settings", "main");
+        onSnapshot(siteSettingsDoc, (snapshot) => {
+            siteSettings = mergeSettings(DEFAULT_SETTINGS, snapshot.exists() ? snapshot.data() : {});
+            applySiteSettings(siteSettings);
+            updateCountdown();
+        }, (error) => {
+            console.error("Lỗi tải cấu hình website: ", error);
+            applySiteSettings(DEFAULT_SETTINGS);
+        });
+
         // --- 2. COUNTDOWN TIMER ---
-        const weddingDate = new Date("Oct 11, 2026 09:00:00").getTime();
         function updateCountdown() {
             const now = new Date().getTime();
+            const weddingDate = new Date(siteSettings.wedding.dateISO).getTime();
             const difference = weddingDate - now;
 
             if (difference < 0) {
@@ -679,6 +913,15 @@
             revealObserver.observe(element);
         });
 
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuToggle?.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        mobileMenu?.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
         // --- 4. FLOATING HEARTS GENERATOR ---
         const heartContainer = document.getElementById('heart-container');
         const heartIcons = ['fa-heart', 'fa-heart-circle-bolt', 'fa-heart-pulse'];
@@ -704,7 +947,7 @@
         setInterval(createHeart, 1500);
 
         // --- 5. LIGHTBOX GALLERY ---
-        const galleryImages = [
+        let galleryImages = [
             "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80&w=1200",
             "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200",
             "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=1200",
@@ -770,8 +1013,8 @@
             modal.classList.toggle('flex');
         }
 
-        document.getElementById('btn-copy-groom').addEventListener('click', () => copyToClipboard('1903546890123'));
-        document.getElementById('btn-copy-bride').addEventListener('click', () => copyToClipboard('101122334455'));
+        document.getElementById('btn-copy-groom').addEventListener('click', () => copyToClipboard(siteSettings.gifts.groom.number));
+        document.getElementById('btn-copy-bride').addEventListener('click', () => copyToClipboard(siteSettings.gifts.bride.number));
 
         function copyToClipboard(text) {
             const el = document.createElement('textarea');
@@ -783,11 +1026,14 @@
             showSuccessModal(`Đã sao chép số tài khoản: ${text} vào bộ nhớ tạm!`);
         }
 
-        document.getElementById('btn-cal-1').addEventListener('click', () => addToCalendar('Lễ Thành Hôn Văn Dương & Thùy Dung', '20261011T090000', '20261011T120000', 'Tư Gia, Hoài Đức, Hà Nội'));
-        document.getElementById('btn-cal-2').addEventListener('click', () => addToCalendar('Tiệc Mừng Đám Cưới Văn Dương & Thùy Dung', '20261011T173000', '20261011T213000', 'Melia Wedding Center, Hoàn Kiếm, Hà Nội'));
+        document.getElementById('btn-cal-1').addEventListener('click', () => addToCalendar(siteSettings.events[0]));
+        document.getElementById('btn-cal-2').addEventListener('click', () => addToCalendar(siteSettings.events[1]));
 
-        function addToCalendar(title, startDate, endDate, location) {
-            const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startDate}/${endDate}&details=${encodeURIComponent('Ngày vui đại hỷ của Văn Dương & Thùy Dung')}&location=${encodeURIComponent(location)}`;
+        function addToCalendar(event) {
+            const title = event.calendarTitle || event.title;
+            const location = [event.location, event.address].filter(Boolean).join(", ");
+            const details = `Ngày vui đại hỷ của ${siteSettings.couple.groomFirstName} & ${siteSettings.couple.brideFirstName}`;
+            const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${event.calendarStart}/${event.calendarEnd}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
             window.open(gCalUrl, '_blank');
         }
 
@@ -837,6 +1083,10 @@
             });
 
             document.getElementById('wish-count').innerText = `${wishesList.length} lời chúc`;
+        }, (error) => {
+            console.error("Lỗi tải lời chúc: ", error);
+            const container = document.getElementById('wishes-container');
+            container.innerHTML = `<div class="bg-white p-5 rounded-2xl text-sm text-red-500 border border-red-100">Không tải được lời chúc: ${error.message}</div>`;
         });
 
         // Gửi lời chúc mới lên Cloud Firestore
@@ -883,7 +1133,7 @@
 
                 let message = `Cảm ơn bạn ${name} đã xác nhận tham dự. `;
                 if (attendance === "Có, tôi sẽ đến") {
-                    message += `Hẹn gặp bạn cùng gia đình/người thương tại Melia Wedding Center vào lúc 17:30 ngày 11/10/2026 nhé!`;
+                    message += `Hẹn gặp bạn cùng gia đình/người thương tại ${siteSettings.events[1].location} vào ${siteSettings.events[1].time.toLowerCase()} nhé!`;
                 } else {
                     message += `Cực kỳ tiếc nuối khi bạn không thể cùng chung vui. Sự quan tâm gửi gắm của bạn cũng khiến hai vợ chồng vô cùng cảm động!`;
                 }
@@ -969,6 +1219,5 @@
             }
         });
     </script>
-    <script type="module" src="app.js"></script>
 </body>
 </html>

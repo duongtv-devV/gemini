@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bảng Điều Khiển Quản Trị - Đám Cưới Đức Anh & Mai Phương</title>
+    <title>Bảng Điều Khiển Quản Trị - Đám Cưới Văn Dương & Thùy Dung</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script defer src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore-compat.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -24,41 +27,199 @@
 </head>
 <body class="bg-slate-50 font-sans text-wedding-dark antialiased">
 
-    <nav class="bg-white border-b border-slate-200 fixed top-0 left-0 right-0 z-30 h-16 flex items-center justify-between px-6 shadow-sm">
-        <div class="flex items-center space-x-3">
-            <span class="text-xl font-serif font-bold text-wedding-primary tracking-wider">D&P Admin Panel</span>
-            <span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-bolt mr-1"></i>Realtime Cloud</span>
+    <section id="login-screen" class="min-h-screen flex items-center justify-center px-4 bg-slate-100">
+        <div class="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-xl p-8">
+            <div class="text-center mb-8">
+                <p class="font-serif text-3xl font-bold text-wedding-primary">D&D Admin</p>
+                <p class="text-sm text-slate-500 mt-2">Đăng nhập để quản lý website cưới</p>
+            </div>
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="admin-email">Email admin</label>
+                    <input id="admin-email" type="email" autocomplete="email" required class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="admin-password">Mật khẩu</label>
+                    <input id="admin-password" type="password" autocomplete="current-password" required class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary">
+                </div>
+                <p id="login-error" class="hidden text-sm text-red-500"></p>
+                <button type="submit" class="w-full rounded-xl bg-wedding-primary text-white py-3 text-sm font-semibold hover:bg-wedding-dark transition-colors">Đăng nhập</button>
+            </form>
         </div>
-        <div class="text-sm font-medium text-slate-500">
-            Chào cặp đôi, <span class="text-wedding-primary font-bold">Đức Anh & Mai Phương</span> ✨
+    </section>
+
+    <div id="admin-shell" class="hidden">
+    <nav class="bg-white/90 backdrop-blur-xl border-b border-slate-200 fixed top-0 left-0 right-0 z-30 h-16 flex items-center justify-between px-4 md:px-6 shadow-sm">
+        <div class="flex items-center space-x-3">
+            <span class="text-xl font-serif font-bold text-wedding-primary tracking-wider">D&D Admin</span>
+            <span class="hidden sm:inline-flex bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-bolt mr-1"></i>Realtime Cloud</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs sm:text-sm font-medium text-slate-500 text-right">
+            <span>Admin: <span id="admin-email-label" class="text-wedding-primary font-bold"></span></span>
+            <button id="btn-logout" class="rounded-full border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50">Đăng xuất</button>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto px-4 md:px-8 pt-24 pb-16">
+        <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-10">
+            <div class="px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between bg-slate-50/70 gap-4">
+                <div>
+                    <h2 class="font-serif text-xl font-bold text-slate-800">Cấu Hình Website</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Lưu lên Firestore và cập nhật realtime trên trang khách.</p>
+                </div>
+                <span id="settings-status" class="text-xs font-semibold text-slate-400">Đang tải cấu hình...</span>
+            </div>
+
+            <form id="settings-form" class="p-6 space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-groom-first-name">Tên chú rể</label>
+                        <input id="setting-groom-first-name" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-bride-first-name">Tên cô dâu</label>
+                        <input id="setting-bride-first-name" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-date-iso">Ngày giờ cưới</label>
+                        <input id="setting-date-iso" type="datetime-local" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-groom-full-name">Họ tên chú rể</label>
+                        <input id="setting-groom-full-name" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-bride-full-name">Họ tên cô dâu</label>
+                        <input id="setting-bride-full-name" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-rsvp-deadline">Hạn RSVP</label>
+                        <input id="setting-rsvp-deadline" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-groom-title">Nghề nghiệp chú rể</label>
+                        <input id="setting-groom-title" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-bride-title">Nghề nghiệp cô dâu</label>
+                        <input id="setting-bride-title" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-hashtag">Hashtag</label>
+                        <input id="setting-hashtag" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-hero-image">Ảnh nền hero URL</label>
+                        <input id="setting-hero-image" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-hero-subtitle">Câu tagline</label>
+                        <input id="setting-hero-subtitle" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-groom-photo">Ảnh chú rể URL</label>
+                        <input id="setting-groom-photo" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-bride-photo">Ảnh cô dâu URL</label>
+                        <input id="setting-bride-photo" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-groom-bio">Giới thiệu chú rể</label>
+                        <textarea id="setting-groom-bio" rows="4" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-bride-bio">Giới thiệu cô dâu</label>
+                        <textarea id="setting-bride-bio" rows="4" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary"></textarea>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="rounded-2xl border border-slate-200 p-4">
+                        <h3 class="font-semibold text-sm text-slate-800 mb-4">Sự kiện 1</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <input id="setting-event-1-title" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Tên sự kiện">
+                            <input id="setting-event-1-subtitle" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Mô tả ngắn">
+                            <input id="setting-event-1-date" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Ngày hiển thị">
+                            <input id="setting-event-1-time" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Giờ hiển thị">
+                            <input id="setting-event-1-location" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Địa điểm">
+                            <input id="setting-event-1-address" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Địa chỉ">
+                            <input id="setting-event-1-map" class="md:col-span-2 rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Google Maps URL">
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 p-4">
+                        <h3 class="font-semibold text-sm text-slate-800 mb-4">Sự kiện 2</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <input id="setting-event-2-title" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Tên sự kiện">
+                            <input id="setting-event-2-subtitle" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Mô tả ngắn">
+                            <input id="setting-event-2-date" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Ngày hiển thị">
+                            <input id="setting-event-2-time" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Giờ hiển thị">
+                            <input id="setting-event-2-location" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Địa điểm">
+                            <input id="setting-event-2-address" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Địa chỉ">
+                            <input id="setting-event-2-map" class="md:col-span-2 rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Google Maps URL">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="rounded-2xl border border-slate-200 p-4">
+                        <h3 class="font-semibold text-sm text-slate-800 mb-4">Tài khoản chú rể</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <input id="setting-groom-bank" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Ngân hàng">
+                            <input id="setting-groom-bank-number" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Số tài khoản">
+                            <input id="setting-groom-bank-owner" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Chủ tài khoản">
+                            <input id="setting-groom-bank-qr" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="QR URL">
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 p-4">
+                        <h3 class="font-semibold text-sm text-slate-800 mb-4">Tài khoản cô dâu</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <input id="setting-bride-bank" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Ngân hàng">
+                            <input id="setting-bride-bank-number" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Số tài khoản">
+                            <input id="setting-bride-bank-owner" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Chủ tài khoản">
+                            <input id="setting-bride-bank-qr" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="QR URL">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2" for="setting-gallery">Gallery URLs, mỗi dòng một ảnh</label>
+                    <textarea id="setting-gallery" rows="5" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-wedding-primary"></textarea>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 justify-end border-t border-slate-100 pt-5">
+                    <button type="button" id="btn-settings-seed" class="px-5 py-3 rounded-xl border border-slate-200 text-slate-700 text-sm font-semibold hover:bg-slate-50">Tạo dữ liệu mẫu</button>
+                    <button type="submit" class="px-5 py-3 rounded-xl bg-wedding-primary text-white text-sm font-semibold hover:bg-wedding-dark transition-colors">Lưu cấu hình</button>
+                </div>
+            </form>
+        </section>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between">
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between hover:-translate-y-0.5 hover:shadow-md transition-all">
                 <div>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tổng khách đi được</p>
                     <h3 id="stat-total" class="text-3xl font-bold mt-1 text-emerald-600">0</h3>
                 </div>
                 <span class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-users"></i></span>
             </div>
-            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between">
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between hover:-translate-y-0.5 hover:shadow-md transition-all">
                 <div>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Khách bên Chú Rể</p>
                     <h3 id="stat-groom-side" class="text-3xl font-bold mt-1 text-wedding-primary">0</h3>
                 </div>
                 <span class="w-12 h-12 rounded-xl bg-amber-50 text-wedding-primary flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-user-tie"></i></span>
             </div>
-            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between">
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between hover:-translate-y-0.5 hover:shadow-md transition-all">
                 <div>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Khách bên Cô Dâu</p>
                     <h3 id="stat-bride-side" class="text-3xl font-bold mt-1 text-wedding-rose">0</h3>
                 </div>
                 <span class="w-12 h-12 rounded-xl bg-rose-50 text-wedding-rose flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-user"></i></span>
             </div>
-            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between">
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between hover:-translate-y-0.5 hover:shadow-md transition-all">
                 <div>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Số khách báo bận</p>
                     <h3 id="stat-decline" class="text-3xl font-bold mt-1 text-rose-600">0</h3>
@@ -110,7 +271,8 @@
         </div>
 
     </main>
+    </div>
 
-    <script type="module" src="app.js"></script>
+    <script defer src="app.js"></script>
 </body>
 </html>
