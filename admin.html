@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Điều Khiển Quản Trị - Đám Cưới Đức Anh & Mai Phương</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        wedding: { primary: '#b08567', secondary: '#d9b48f', dark: '#2d2b2a', bg: '#fcfaf7', rose: '#e5b2a1' }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['"Playfair Display"', 'serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 font-sans text-wedding-dark antialiased">
+
+    <nav class="bg-white border-b border-slate-200 fixed top-0 left-0 right-0 z-30 h-16 flex items-center justify-between px-6 shadow-sm">
+        <div class="flex items-center space-x-3">
+            <span class="text-xl font-serif font-bold text-wedding-primary tracking-wider">D&P Admin Panel</span>
+            <span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-bolt mr-1"></i>Realtime Cloud</span>
+        </div>
+        <div class="text-sm font-medium text-slate-500">
+            Chào cặp đôi, <span class="text-wedding-primary font-bold">Đức Anh & Mai Phương</span> ✨
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 md:px-8 pt-24 pb-16">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tổng khách đi được</p>
+                    <h3 id="stat-total" class="text-3xl font-bold mt-1 text-emerald-600">0</h3>
+                </div>
+                <span class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-users"></i></span>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Khách bên Chú Rể</p>
+                    <h3 id="stat-groom-side" class="text-3xl font-bold mt-1 text-wedding-primary">0</h3>
+                </div>
+                <span class="w-12 h-12 rounded-xl bg-amber-50 text-wedding-primary flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-user-tie"></i></span>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Khách bên Cô Dâu</p>
+                    <h3 id="stat-bride-side" class="text-3xl font-bold mt-1 text-wedding-rose">0</h3>
+                </div>
+                <span class="w-12 h-12 rounded-xl bg-rose-50 text-wedding-rose flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-user"></i></span>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Số khách báo bận</p>
+                    <h3 id="stat-decline" class="text-3xl font-bold mt-1 text-rose-600">0</h3>
+                </div>
+                <span class="w-12 h-12 rounded-xl bg-red-50 text-red-500 flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-user-slash"></i></span>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-12">
+            <div class="px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between bg-slate-50/70 gap-4">
+                <div>
+                    <h2 class="font-serif text-xl font-bold text-slate-800">Danh Sách Phản Hồi RSVP</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Cập nhật tự động ngay khi khách bấm gửi trên form website.</p>
+                </div>
+                <button id="btn-export-excel" class="self-start sm:self-auto bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium px-4 py-2.5 rounded-xl transition-all shadow-sm flex items-center">
+                    <i class="fa-solid fa-file-excel mr-2"></i> Xuất file in ấn
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-200 bg-slate-100/50 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                            <th class="py-3 px-6">Họ và Tên Khách</th>
+                            <th class="py-3 px-6">Số Điện Thoại</th>
+                            <th class="py-3 px-6">Nhóm Khách</th>
+                            <th class="py-3 px-6">Trạng Thái</th>
+                            <th class="py-3 px-6 text-center">Số Lượng Đi</th>
+                            <th class="py-3 px-6">Yêu Cầu Món Ăn / Ghi Chú</th>
+                            <th class="py-3 px-6 text-center">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-rsvp-rows" class="divide-y divide-slate-100 text-sm text-slate-700">
+                        <tr>
+                            <td colspan="7" class="text-center py-8 text-slate-400 italic">Đang tải dữ liệu phản hồi từ Cloud...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <div class="mb-6">
+                <h2 class="font-serif text-xl font-bold text-slate-800">Kiểm Duyệt Lời Chúc Mừng</h2>
+                <p class="text-xs text-slate-400 mt-0.5">Xóa bỏ các lời chúc spam hoặc không hợp lệ trước khi hiển thị lên màn hình chính.</p>
+            </div>
+            <div id="admin-wishes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="col-span-full text-center py-8 text-slate-400 italic">Đang tải dữ liệu lưu bút...</div>
+            </div>
+        </div>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
